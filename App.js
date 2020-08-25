@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View, FlatList} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
+
 import Cita from './components/Cita';
+import Formulario from "./components/Formulario";
 
 const App = () => {
   const [citas, setCitas] = useState([
@@ -19,6 +21,7 @@ const App = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Administador de Citas</Text>
+      <Formulario/>
       <Text style={styles.title}>
         {citas.length > 0 ? 'Administra tus Citas' : 'No hay citas, agrega una'}
       </Text>
@@ -44,6 +47,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
+    color: "#FFF",
   },
 });
 
