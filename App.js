@@ -3,7 +3,9 @@ import {
   StyleSheet,
   Text,
   View,
+  FlatList,
 } from 'react-native';
+import Cita from "./components/Cita";
 
 const App = () => {
 
@@ -16,11 +18,13 @@ const App = () => {
   return (
       <View style={styles.container}>
         <Text style={styles.title}>Administador de Citas</Text>
-        {citas.map(cita => (
-          <View>
-            <Text >{cita.paciente}</Text>
-          </View>
-        ))}
+        <FlatList 
+          data={citas}
+          renderItem={({item}) => (
+            <Cita item={item} ></Cita>
+          )}
+          keyExtractor={cita => cita.id}
+        />
       </View>
   );
 };
@@ -29,7 +33,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#AA076B',
     flex: 1,
-
   },
   title:{
     marginTop: 40,
