@@ -16,8 +16,6 @@ const App = () => {
     setCitas((citasActuales) => citasActuales.filter((cita) => cita.id !== id));
   };
 
-  console.log(citas);
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Administador de Citas</Text>
