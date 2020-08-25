@@ -1,5 +1,14 @@
 import React, {useState} from 'react';
-import {FlatList, StyleSheet, Text, View, TouchableHighlight, Platform} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  TouchableHighlight,
+  TouchableNativeFeedback,
+  Keyboard,
+  Platform,
+} from 'react-native';
 
 import Cita from './components/Cita';
 import Formulario from './components/Formulario';
@@ -7,11 +16,7 @@ import Formulario from './components/Formulario';
 const App = () => {
   const [mostrarForm, setMostrarForm] = useState(false);
 
-  const [citas, setCitas] = useState([
-    {id: '1', paciente: 'Hook', propietario: 'Juan', sintomas: 'No Come'},
-    {id: '2', paciente: 'Redux', propietario: 'Itzel', sintomas: 'No Duerme'},
-    {id: '3', paciente: 'Native', propietario: 'Josue', sintomas: 'No Canta'},
-  ]);
+  const [citas, setCitas] = useState([]);
 
   //Elimina los pacientes del state
   const eliminarPaciente = (id) => {
@@ -21,47 +26,54 @@ const App = () => {
   //Mostrar Formulario
   const handleShowFormCita = () => {
     setMostrarForm(!mostrarForm);
-  }
+  };
+
+  //Ocultar Teclado
+  const closeKeyboard = () => {
+    Keyboard.dismiss();
+  };
 
   return (
-    <View style={styles.container}>
+    <TouchableNativeFeedback onPress={() => closeKeyboard()}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Administador de Citas</Text>
 
-      <Text style={styles.title}>Administador de Citas</Text>
-
-      <View>
+        <View>
           <TouchableHighlight
             style={styles.btnSubmit}
             onPress={() => handleShowFormCita()}>
-            <Text style={styles.textSubmit}>Craer Nueva Cita</Text>
+            <Text style={styles.textSubmit}>{mostrarForm ? 'Cancelar Nueva Cita' : 'Craer Nueva Cita'}</Text>
           </TouchableHighlight>
         </View>
 
-      <View style={styles.content}>
-        {mostrarForm ? (
-          <>
-          <Formulario />
-          </>
-        ) : (
-          <>
-            <Text style={styles.title}>
-              {citas.length > 0
-                ? 'Administra tus Citas'
-                : 'No hay citas, agrega una'}
-            </Text>
-            <FlatList
-              style={styles.list}
-              data={citas}
-              renderItem={({item}) => (
-                <Cita
-                  item={item}
-                  eliminarPaciente={() => eliminarPaciente(item.id)}></Cita>
-              )}
-              keyExtractor={(cita) => cita.id}
-            />
-          </>
-        )}
+        <View style={styles.content}>
+          {mostrarForm ? (
+            <>
+            <Text style={styles.title}>Crear Nueva Cita</Text>
+              <Formulario citas={citas} setCitas={setCitas} setMostrarForm={setMostrarForm} />
+            </>
+          ) : (
+            <>
+              <Text style={styles.title}>
+                {citas.length > 0
+                  ? 'Administra tus Citas'
+                  : 'No hay citas, agrega una'}
+              </Text>
+              <FlatList
+                style={styles.list}
+                data={citas}
+                renderItem={({item}) => (
+                  <Cita
+                    item={item}
+                    eliminarPaciente={() => eliminarPaciente(item.id)}></Cita>
+                )}
+                keyExtractor={(cita) => cita.id}
+              />
+            </>
+          )}
+        </View>
       </View>
-    </View>
+    </TouchableNativeFeedback>
   );
 };
 
@@ -71,7 +83,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    marginTop: Platform.OS === 'ios' ? 40: 20,
+    marginTop: Platform.OS === 'ios' ? 40 : 20,
     marginBottom: 20,
     fontSize: 24,
     fontWeight: 'bold',
