@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 
 import Cita from './components/Cita';
-import Formulario from "./components/Formulario";
+import Formulario from './components/Formulario';
 
 const App = () => {
   const [citas, setCitas] = useState([
@@ -19,17 +19,24 @@ const App = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Administador de Citas</Text>
-      <Formulario/>
-      <Text style={styles.title}>
-        {citas.length > 0 ? 'Administra tus Citas' : 'No hay citas, agrega una'}
-      </Text>
-      <FlatList
-        data={citas}
-        renderItem={({item}) => (
-          <Cita item={item} eliminarPaciente={() => eliminarPaciente(item.id)}></Cita>
-        )}
-        keyExtractor={(cita) => cita.id}
-      />
+      <View style={styles.content}>
+        <Formulario />
+        <Text style={styles.title}>
+          {citas.length > 0
+            ? 'Administra tus Citas'
+            : 'No hay citas, agrega una'}
+        </Text>
+        <FlatList
+          style={styles.list}
+          data={citas}
+          renderItem={({item}) => (
+            <Cita
+              item={item}
+              eliminarPaciente={() => eliminarPaciente(item.id)}></Cita>
+          )}
+          keyExtractor={(cita) => cita.id}
+        />
+      </View>
     </View>
   );
 };
@@ -45,8 +52,15 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: "#FFF",
+    color: '#FFF',
   },
+  content:{
+    flex: 1,
+    marginHorizontal: '2.5%'
+  },
+  list:{
+    flex: 1,
+  }
 });
 
 export default App;

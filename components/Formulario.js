@@ -1,11 +1,24 @@
 import React, {useState} from 'react';
-import {Text, TextInput, Button, View, StyleSheet} from 'react-native';
+import {
+  Text,
+  TextInput,
+  Button,
+  View,
+  StyleSheet,
+  TouchableHighlight,
+  Alert,
+  ScrollView,
+} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const Formulario = () => {
+  const [paciente, setPaciente] = useState('');
+  const [propietario, setPropietario] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
+  const [sintomas, setSintomas] = useState('');
 
-  const [date, setDate] = useState(null);
-  const [time, setTime] = useState(null);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 
@@ -19,7 +32,7 @@ const Formulario = () => {
   };
 
   const handleConfirmDate = (date) => {
-    const options = {year: 'numeric', month: 'long', day: '2-digit'}
+    const options = {year: 'numeric', month: 'long', day: '2-digit'};
     setDate(date.toLocaleDateString('en-US', options));
     hideDatePicker();
   };
@@ -34,19 +47,44 @@ const Formulario = () => {
   };
 
   const handleConfirmTime = (date) => {
-    const options = {hour: 'numeric', minute: '2-digit'}
+    const options = {hour: 'numeric', minute: '2-digit'};
     setTime(date.toLocaleDateString('en-US', options));
     hideTimePicker();
   };
 
+  //Crear nueva cita
+  const crearNuevaCita = () => {
+    // console.log("Nueva Cita");
+    if (
+      paciente.trim() === '' ||
+      propietario.trim() === '' ||
+      date.trim() === '' ||
+      time.trim() === '' ||
+      sintomas.trim() === ''
+    ) {
+      // Falla la validación
+      mostrarAlerta();
+      return;
+    }
+  };
+
+  // Muestra la alarta si falla la validación
+  const mostrarAlerta = () => {
+    Alert.alert('Error', 'Todos los campos', [
+      {
+        text: 'Ok',
+      },
+    ]);
+  };
+
   return (
     <>
-      <View style={styles.formulario}>
+      <ScrollView style={styles.formulario}>
         <View>
           <Text style={styles.label}>Paciente: </Text>
           <TextInput
             style={styles.input}
-            onChangeText={(text) => console.log(text)}
+            onChangeText={(text) => setPaciente(text)}
           />
         </View>
 
@@ -54,7 +92,7 @@ const Formulario = () => {
           <Text style={styles.label}>Dueño: </Text>
           <TextInput
             style={styles.input}
-            onChangeText={(text) => console.log(text)}
+            onChangeText={(text) => setPropietario(text)}
           />
         </View>
 
@@ -62,7 +100,7 @@ const Formulario = () => {
           <Text style={styles.label}>Télefono: </Text>
           <TextInput
             style={styles.input}
-            onChangeText={(text) => console.log(text)}
+            onChangeText={(text) => setTelefono(text)}
             keyboardType={'numeric'}
           />
         </View>
@@ -73,7 +111,7 @@ const Formulario = () => {
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
             mode="date"
-            locale='en_US'
+            locale="en_US"
             onConfirm={handleConfirmDate}
             onCancel={hideDatePicker}
             headerTextIOS="Select Date"
@@ -89,7 +127,7 @@ const Formulario = () => {
           <DateTimePickerModal
             isVisible={isTimePickerVisible}
             mode="time"
-            locale='en_US'
+            locale="en_US"
             onConfirm={handleConfirmTime}
             onCancel={hideTimePicker}
             headerTextIOS="Select Time"
@@ -104,10 +142,18 @@ const Formulario = () => {
           <TextInput
             multiline
             style={styles.input}
-            onChangeText={(text) => console.log(text)}
+            onChangeText={(text) => setSintomas(text)}
           />
         </View>
-      </View>
+
+        <View>
+          <TouchableHighlight
+            style={styles.btnSubmit}
+            onPress={() => crearNuevaCita()}>
+            <Text style={styles.textSubmit}>Craer Nueva Cita</Text>
+          </TouchableHighlight>
+        </View>
+      </ScrollView>
     </>
   );
 };
@@ -130,6 +176,16 @@ const styles = StyleSheet.create({
     borderColor: '#e1e1e1',
     borderWidth: 1,
     borderStyle: 'solid',
+  },
+  btnSubmit: {
+    padding: 10,
+    backgroundColor: '#7d024e',
+    marginVertical: 10,
+  },
+  textSubmit: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 
